@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Encargado — Manual del Administrador</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --accent: #5b6af8;
+    --accent-light: #eef0ff;
+    --text: #1a1d2e;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --bg-soft: #f9fafb;
+    --success: #059669;
+    --success-bg: #ecfdf5;
+    --warning: #d97706;
+    --warning-bg: #fffbeb;
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+    --info-bg: #eff6ff;
+    --info: #2563eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--text);
+    background: white;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 48px 56px;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 80px;
+    page-break-after: always;
+  }
+  .cover-logo {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  .cover-logo span { color: var(--text); }
+  .cover-tagline {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 80px;
+  }
+  .cover h1 {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .cover-subtitle {
+    font-size: 17px;
+    color: var(--text-muted);
+    font-weight: 400;
+    max-width: 480px;
+    line-height: 1.6;
+  }
+  .cover-meta {
+    margin-top: auto;
+    padding-top: 80px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+  }
+  .cover-divider {
+    width: 48px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 2px;
+    margin: 28px 0 32px;
+  }
+
+  /* ── TOC ── */
+  .toc {
+    page-break-after: always;
+    padding: 40px 0;
+  }
+  .toc h2 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px dotted var(--border);
+    font-size: 13.5px;
+  }
+  .toc-item .num {
+    font-weight: 600;
+    color: var(--accent);
+    min-width: 20px;
+    font-size: 12px;
+  }
+  .toc-item .title { flex: 1; }
+  .toc-sub {
+    padding-left: 28px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    border-bottom: none;
+    padding-bottom: 2px;
+  }
+
+  /* ── Sections ── */
+  section {
+    padding: 56px 0 32px;
+    border-top: 2px solid var(--border);
+    page-break-inside: avoid;
+  }
+  section:first-of-type { border-top: none; }
+
+  .section-num {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  h2 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 28px 0 10px;
+    color: var(--text);
+  }
+  h4 {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 20px 0 8px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  p { margin-bottom: 12px; color: var(--text); }
+  p:last-child { margin-bottom: 0; }
+
+  ul, ol {
+    padding-left: 20px;
+    margin-bottom: 12px;
+  }
+  li { margin-bottom: 4px; }
+
+  /* ── Callouts ── */
+  .callout {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .callout-icon { font-size: 15px; margin-top: 1px; flex-shrink: 0; }
+  .callout.info { background: var(--info-bg); color: var(--info); }
+  .callout.warning { background: var(--warning-bg); color: var(--warning); }
+  .callout.success { background: var(--success-bg); color: var(--success); }
+  .callout.tip { background: var(--accent-light); color: var(--accent); }
+
+  /* ── Code / CSV ── */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: #1e2030;
+    color: #c8d3f5;
+    border-radius: 8px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    margin: 12px 0 20px;
+    line-height: 1.6;
+  }
+  pre .comment { color: #636da6; }
+  pre .key { color: #82aaff; }
+  pre .val { color: #c3e88d; }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin: 12px 0 20px;
+  }
+  th {
+    background: var(--bg-soft);
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+  td {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: var(--bg-soft); }
+
+  /* ── Steps ── */
+  .steps { margin: 16px 0; }
+  .step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-body { flex: 1; }
+  .step-body strong { display: block; margin-bottom: 2px; font-size: 13.5px; }
+  .step-body p { font-size: 13px; color: var(--text-muted); margin: 0; }
+
+  /* ── Role badges ── */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 99px;
+    margin-right: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .badge.admin { background: #dbeafe; color: #1d4ed8; }
+  .badge.comision { background: #fce7f3; color: #9d174d; }
+  .badge.guest { background: #d1fae5; color: #065f46; }
+  .badge.superadmin { background: #ede9fe; color: #5b21b6; }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* ── Print ── */
+  @media print {
+    body { padding: 0; font-size: 12px; }
+    .cover { min-height: auto; padding: 60px 0 80px; }
+    section { page-break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; }
+    pre, table { page-break-inside: avoid; }
+    @page { margin: 20mm 18mm; size: A4; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════ COVER -->
+<div class="cover">
+  <div class="cover-logo">el<span>encargado</span></div>
+  <div class="cover-tagline">Gestión de edificios inteligente</div>
+
+  <div class="cover-divider"></div>
+
+  <h1>Manual del<br>Administrador</h1>
+  <p class="cover-subtitle">
+    Guía de uso para administradores y comisiones de edificio.
+    Cubre el acceso al sistema, la gestión de unidades, la recaudación de expensas,
+    proveedores, gastos y más.
+  </p>
+
+  <div class="cover-meta">
+    <span>elencargado.app</span>
+    <span>Versión 1.0 — Noviembre 2026</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ TOC -->
+<div class="toc">
+  <h2>Contenido</h2>
+
+  <div class="toc-item"><span class="num">1</span><span class="title">Acceso al sistema</span></div>
+  <div class="toc-item"><span class="num">2</span><span class="title">Roles y permisos</span></div>
+  <div class="toc-item"><span class="num">3</span><span class="title">Alta de un edificio nuevo</span></div>
+  <div class="toc-item toc-sub"><span class="num"></span><span class="title">3.1 Carga de unidades por CSV</span></div>
+  <div class="toc-item toc-sub"><span class="num"></span><span class="title">3.2 Configuración de distribución</span></div>
+  <div class="toc-item"><span class="num">4</span><span class="title">Gestión de unidades</span></div>
+  <div class="toc-item toc-sub"><span class="num"></span><span class="title">4.1 Saldo inicial (deuda histórica)</span></div>
+  <div class="toc-item"><span class="num">5</span><span class="title">Recaudación de expensas</span></div>
+  <div class="toc-item toc-sub"><span class="num"></span><span class="title">5.1 Crear un período</span></div>
+  <div class="toc-item toc-sub"><span class="num"></span><span class="title">5.2 Registrar un pago</span></div>
+  <div class="toc-item toc-sub"><span class="num"></span><span class="title">5.3 Cerrar un período</span></div>
+  <div class="toc-item"><span class="num">6</span><span class="title">Proveedores y gastos</span></div>
+  <div class="toc-item"><span class="num">7</span><span class="title">Proyectos extraordinarios</span></div>
+  <div class="toc-item"><span class="num">8</span><span class="title">Amenities (espacios comunes)</span></div>
+  <div class="toc-item"><span class="num">9</span><span class="title">Comunicados</span></div>
+  <div class="toc-item"><span class="num">10</span><span class="title">Asambleas</span></div>
+  <div class="toc-item"><span class="num">11</span><span class="title">Usuarios del edificio</span></div>
+  <div class="toc-item"><span class="num">12</span><span class="title">Preguntas frecuentes</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════ 1. ACCESO -->
+<section>
+  <div class="section-num">Sección 1</div>
+  <h2>Acceso al sistema</h2>
+
+  <p>
+    El Encargado es una aplicación web accesible desde cualquier navegador moderno en
+    <strong>elencargado.app</strong>. También puede instalarse como aplicación en el celular
+    (PWA): en el navegador, elegí <em>"Agregar a pantalla de inicio"</em>.
+  </p>
+
+  <h3>Iniciar sesión</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Ingresá a elencargado.app</strong>
+        <p>Se muestra la pantalla de login con campos de email y contraseña.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Ingresá tus credenciales</strong>
+        <p>Tu administradora te habrá enviado un email con usuario y contraseña temporal.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Cambiá tu contraseña si es la primera vez</strong>
+        <p>El sistema te lo pedirá automáticamente al ingresar con contraseña temporal.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Selección de edificio</h3>
+  <p>
+    Si tenés acceso a más de un edificio, al ingresar verás la lista de edificios disponibles.
+    Hacé clic en el edificio que querés gestionar para acceder a su dashboard.
+  </p>
+
+  <div class="callout tip">
+    <span class="callout-icon">💡</span>
+    <div>El sistema recuerda el último edificio que usaste. En la próxima sesión entrará directamente a él.</div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════ 2. ROLES -->
+<section>
+  <div class="section-num">Sección 2</div>
+  <h2>Roles y permisos</h2>
+
+  <p>Cada usuario tiene un rol que determina qué puede ver y hacer en el sistema.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Rol</th>
+        <th>Descripción</th>
+        <th>Permisos principales</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge superadmin">superadmin</span></td>
+        <td>Usuario de la administradora</td>
+        <td>Crear y configurar edificios, asignar admins</td>
+      </tr>
+      <tr>
+        <td><span class="badge admin">admin</span></td>
+        <td>Administrador del edificio</td>
+        <td>Gestión completa: unidades, recaudación, proveedores, gastos, proyectos, comunicados</td>
+      </tr>
+      <tr>
+        <td><span class="badge comision">comision</span></td>
+        <td>Miembro de la comisión</td>
+        <td>Registrar pagos, consultar estado. Sin acceso a configuración ni eliminación</td>
+      </tr>
+      <tr>
+        <td><span class="badge guest">guest</span></td>
+        <td>Propietario / residente</td>
+        <td>Ve únicamente su propia unidad: estado de cuenta y comunicados</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout info">
+    <span class="callout-icon">ℹ️</span>
+    <div>Este manual está dirigido principalmente a usuarios con rol <strong>admin</strong> y <strong>comision</strong>.</div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════ 3. ALTA EDIFICIO -->
+<section>
+  <div class="section-num">Sección 3</div>
+  <h2>Alta de un edificio nuevo</h2>
+
+  <p>
+    Al crear un edificio nuevo, el sistema guía a través de un asistente de configuración inicial
+    (onboarding) con 6 pasos. El objetivo es completarlo en menos de 2 horas.
+  </p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Información del edificio</strong>
+        <p>Nombre, dirección, ciudad, país y notas.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Método de distribución de expensas</strong>
+        <p>Cómo se reparte el total entre las unidades: milésimas, superficie m², o partes iguales.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Carga de unidades</strong>
+        <p>Por CSV (recomendado para edificios con muchas unidades) o manualmente una a una.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Política de deudores</strong>
+        <p>Configurar cuándo una unidad se clasifica como deudora.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <strong>Usuarios administradores</strong>
+        <p>Invitar a otros administradores o miembros de comisión.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <strong>Acceso guest para propietarios</strong>
+        <p>Los propietarios con email recibirán invitación automática.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>3.1 Carga de unidades por CSV</h3>
+
+  <p>
+    La forma más rápida de cargar todas las unidades del edificio es importar un archivo CSV.
+    El sistema acepta los siguientes campos:
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Columna</th><th>Requerida</th><th>Descripción</th><th>Ejemplo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>unit_code</code></td><td>✅ Sí</td><td>Código único de la unidad</td><td>101, PB-L1, G-05</td></tr>
+      <tr><td><code>propietario_nombre</code></td><td>No</td><td>Nombre del propietario</td><td>María Pérez</td></tr>
+      <tr><td><code>propietario_email</code></td><td>No</td><td>Email (recibe invitación guest)</td><td>maria@ejemplo.com</td></tr>
+      <tr><td><code>coeficiente</code></td><td>Si usás milésimas</td><td>Valor en milésimas (total = 1000)</td><td>52</td></tr>
+      <tr><td><code>superficie_m2</code></td><td>Si usás m²</td><td>Superficie en metros cuadrados</td><td>87.50</td></tr>
+      <tr><td><code>tipo_unidad</code></td><td>No</td><td>Tipo de unidad</td><td>apartamento, local, cochera, baulera</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Ejemplo de CSV (distribución por milésimas)</h4>
+  <pre><span class="comment"># El archivo debe ser UTF-8, separado por comas</span>
+<span class="key">unit_code</span>,<span class="key">propietario_nombre</span>,<span class="key">propietario_email</span>,<span class="key">coeficiente</span>,<span class="key">tipo_unidad</span>
+<span class="val">101</span>,<span class="val">María Pérez</span>,<span class="val">maria@email.com</span>,<span class="val">52</span>,<span class="val">apartamento</span>
+<span class="val">102</span>,<span class="val">Juan García</span>,<span class="val">juan@email.com</span>,<span class="val">48</span>,<span class="val">apartamento</span>
+<span class="val">201</span>,<span class="val">Ana Rodríguez</span>,<span class="val"></span>,<span class="val">55</span>,<span class="val">apartamento</span>
+<span class="val">G-01</span>,<span class="val">Carlos López</span>,<span class="val">carlos@email.com</span>,<span class="val">18</span>,<span class="val">cochera</span>
+<span class="val">PB-L1</span>,<span class="val">Comercial SA</span>,<span class="val">local@comercial.com</span>,<span class="val">120</span>,<span class="val">local</span></pre>
+
+  <div class="callout warning">
+    <span class="callout-icon">⚠️</span>
+    <div>
+      Si el método de distribución es <strong>milésimas</strong>, la suma de todos los coeficientes
+      debe ser <strong>1000</strong>. Si no coincide, el sistema igualmente importa las unidades
+      pero el reparto podría no ser exacto.
+    </div>
+  </div>
+
+  <div class="callout success">
+    <span class="callout-icon">✅</span>
+    <div>
+      Las unidades con email recibirán automáticamente una invitación para acceder
+      a su panel de propietario (rol guest) al finalizar el onboarding.
+    </div>
+  </div>
+
+  <h3>3.2 Configuración de distribución</h3>
+
+  <table>
+    <thead>
+      <tr><th>Método</th><th>Descripción</th><th>Usar cuando...</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Milésimas</strong></td>
+        <td>Cada unidad tiene un coeficiente proporcional. La suma total es 1000.</td>
+        <td>El reglamento del edificio define coeficientes.</td>
+      </tr>
+      <tr>
+        <td><strong>Superficie m²</strong></td>
+        <td>El monto se reparte proporcionalmente al área de cada unidad.</td>
+        <td>Las unidades tienen distintos tamaños y no hay coeficientes asignados.</td>
+      </tr>
+      <tr>
+        <td><strong>Partes iguales</strong></td>
+        <td>Todas las unidades pagan exactamente lo mismo.</td>
+        <td>El edificio tiene política de pago igualitario.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════ 4. UNIDADES -->
+<section>
+  <div class="section-num">Sección 4</div>
+  <h2>Gestión de unidades</h2>
+
+  <p>
+    Las unidades se gestionan desde el menú lateral <strong>Unidades</strong>.
+    Cada unidad activa se incluye automáticamente en cada nuevo período de recaudación.
+  </p>
+
+  <h3>Crear o editar una unidad</h3>
+  <p>
+    Hacé clic en <strong>+ Nueva unidad</strong> o en el ícono de editar sobre una unidad existente.
+    El formulario tiene tres secciones:
+  </p>
+  <ul>
+    <li><strong>Identificación:</strong> código único y tipo de unidad.</li>
+    <li><strong>Propietario y residente:</strong> nombre, email y teléfono de contacto.</li>
+    <li><strong>Distribución:</strong> coeficiente (milésimas) o superficie (m²), según el método configurado.</li>
+    <li><strong>Saldo inicial:</strong> deuda histórica de períodos anteriores al sistema (ver sección 4.1).</li>
+  </ul>
+
+  <h3>Eliminar una unidad</h3>
+  <p>
+    Solo se puede eliminar una unidad si <strong>no tiene filas de recaudación</strong>.
+    Si ya participó en algún período, el sistema la marca como inactiva en lugar de borrarla.
+  </p>
+
+  <h3>4.1 Saldo inicial (deuda histórica)</h3>
+
+  <p>
+    Al incorporar un edificio que ya tiene historial de pagos, algunas unidades pueden traer
+    deuda de períodos anteriores al sistema. El campo <strong>Saldo inicial ($)</strong>
+    permite registrar esa deuda.
+  </p>
+
+  <div class="callout info">
+    <span class="callout-icon">ℹ️</span>
+    <div>
+      El saldo inicial se aplica <strong>únicamente en el primer período</strong> creado para ese edificio,
+      como arrastre inicial. A partir del segundo período, el arrastre se calcula automáticamente
+      del período anterior.
+    </div>
+  </div>
+
+  <p><strong>Ejemplo:</strong> la unidad 301 tiene una deuda histórica de $1.500.
+  En el formulario se ingresa <code>1500</code> en "Saldo inicial ($)".
+  Al crear el primer período, esa unidad tendrá un arrastre de $1.500 sumado a su expensa.</p>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════ 5. RECAUDACIÓN -->
+<section>
+  <div class="section-num">Sección 5</div>
+  <h2>Recaudación de expensas</h2>
+
+  <p>
+    La recaudación se gestiona desde el menú <strong>Recaudación</strong>.
+    Un <em>período</em> es el intervalo de cobro (ej. "Junio 2026") que agrupa todas las
+    expensas de ese mes o trimestre.
+  </p>
+
+  <div class="callout warning">
+    <span class="callout-icon">⚠️</span>
+    <div>Solo puede haber <strong>un período abierto</strong> a la vez. Para crear uno nuevo, debés cerrar el actual.</div>
+  </div>
+
+  <h3>5.1 Crear un período</h3>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Clic en "Nuevo período"</strong>
+        <p>Accesible desde la página de Recaudación.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Completar el formulario</strong>
+        <p>Nombre del período (ej. "Junio 2026"), fecha de inicio, fecha límite de pago, expensa total en UYU, y porcentaje de Beneficio por Pronto Pago.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Revisar el tipo de cambio</strong>
+        <p>Se completa automáticamente con la cotización del BCU del día. Podés ajustarlo manualmente.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Confirmar</strong>
+        <p>El sistema genera automáticamente una fila por cada unidad activa, distribuyendo el total según el método configurado.</p>
+      </div>
+    </div>
+  </div>
+
+  <h4>Conceptos del período</h4>
+  <table>
+    <thead>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Expensa total</strong></td>
+        <td>Monto total en UYU que se reparte entre todas las unidades participantes.</td>
+      </tr>
+      <tr>
+        <td><strong>Beneficio por Pronto Pago</strong></td>
+        <td>Porcentaje de descuento para quien paga antes de la fecha límite. Ej: 10% → quien paga a tiempo paga el 90% del Monto Base.</td>
+      </tr>
+      <tr>
+        <td><strong>Monto con Beneficio</strong></td>
+        <td>Lo que paga la unidad si abona antes de la fecha límite.</td>
+      </tr>
+      <tr>
+        <td><strong>Monto Base</strong></td>
+        <td>Lo que paga la unidad si abona después de la fecha límite (pierde el beneficio).</td>
+      </tr>
+      <tr>
+        <td><strong>Arrastre</strong></td>
+        <td>Saldo impago del período anterior que se suma al monto a pagar en el período actual.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>5.2 Registrar un pago</h3>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Encontrar la unidad en la tabla</strong>
+        <p>La tabla muestra todas las unidades con su estado actual (pendiente, parcial, pagado, deudor).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Clic en el ícono de pago de esa fila</strong>
+        <p>Se abre el modal de registro de pago.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Ingresar el monto y la fecha</strong>
+        <p>El sistema sugiere el monto correspondiente (con o sin beneficio, según la fecha). Podés registrar pagos parciales.</p>
+      </div>
+    </div>
+  </div>
+
+  <h4>Estados de una fila</h4>
+  <table>
+    <thead>
+      <tr><th>Estado</th><th>Significado</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Pendiente</td><td>No registró ningún pago.</td></tr>
+      <tr><td>Pagado en fecha</td><td>Pagó el monto con beneficio antes de la fecha límite.</td></tr>
+      <tr><td>Pagado fuera de fecha</td><td>Pagó el monto base después de la fecha límite.</td></tr>
+      <tr><td>Parcial en fecha</td><td>Pagó algo antes de la fecha límite, pero no el total.</td></tr>
+      <tr><td>Parcial fuera de fecha</td><td>Pagó algo después de la fecha límite, pero no el total.</td></tr>
+      <tr><td>Deudor</td><td>Superó el umbral de deuda definido en la política de deudores.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.3 Cerrar un período</h3>
+
+  <p>
+    Al cerrar un período, el sistema congela los saldos. El balance impago de cada unidad
+    se convierte en <strong>arrastre</strong> que se suma automáticamente al próximo período.
+  </p>
+
+  <div class="callout warning">
+    <span class="callout-icon">⚠️</span>
+    <div>
+      <strong>Esta acción es irreversible.</strong> Una vez cerrado, no se pueden registrar
+      más pagos en ese período. Asegurate de haber registrado todos los pagos antes de cerrar.
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════ 6. PROVEEDORES Y GASTOS -->
+<section>
+  <div class="section-num">Sección 6</div>
+  <h2>Proveedores y gastos</h2>
+
+  <h3>Proveedores</h3>
+  <p>
+    Desde el menú <strong>Proveedores</strong> podés mantener un registro de empresas y personas
+    que prestan servicios al edificio. Cada proveedor puede tener datos bancarios para facilitar
+    los pagos.
+  </p>
+  <p>
+    También es posible importar proveedores masivamente desde un archivo CSV usando el botón
+    <strong>"Importar CSV"</strong> en la página de proveedores.
+  </p>
+
+  <h3>Gastos</h3>
+  <p>
+    Desde el menú <strong>Gastos</strong> registrás las facturas recibidas de los proveedores.
+    Cada gasto tiene:
+  </p>
+  <ul>
+    <li><strong>Proveedor:</strong> quién emitió la factura.</li>
+    <li><strong>Número de factura, descripción y notas.</strong></li>
+    <li><strong>Fecha de emisión y vencimiento.</strong></li>
+    <li><strong>Monto y moneda</strong> (UYU o USD). Los gastos en USD se convierten automáticamente usando el tipo de cambio del período.</li>
+    <li><strong>Estado de pago:</strong> pendiente o pagado.</li>
+    <li><strong>Comprobante:</strong> podés adjuntar la factura en PDF o imagen.</li>
+  </ul>
+
+  <div class="callout tip">
+    <span class="callout-icon">💡</span>
+    <div>Los gastos se asocian a un período para facilitar el seguimiento de los costos operativos del edificio.</div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════ 7. PROYECTOS -->
+<section>
+  <div class="section-num">Sección 7</div>
+  <h2>Proyectos extraordinarios</h2>
+
+  <p>
+    Los proyectos son obras o mejoras del edificio (pintura, ascensor, impermeabilización)
+    que se cobran por separado de las expensas regulares, distribuidos en cuotas.
+  </p>
+
+  <h3>Crear un proyecto</h3>
+  <p>Desde el menú <strong>Proyectos</strong>, completar:</p>
+  <ul>
+    <li><strong>Nombre y descripción</strong> de la obra.</li>
+    <li><strong>Modalidad:</strong> Administración directa o Contratista externo.</li>
+    <li><strong>Moneda base</strong> (UYU o USD).</li>
+    <li><strong>Entrega inicial</strong> y cuotas sucesivas con sus fechas de vencimiento.</li>
+  </ul>
+
+  <h3>Generar cuotas</h3>
+  <p>
+    Al generar una cuota, el sistema crea automáticamente una fila en la tabla de recaudación
+    de cada unidad activa. Aparece junto a las filas de expensas regulares, diferenciada como
+    origen "proyecto".
+  </p>
+
+  <div class="callout info">
+    <span class="callout-icon">ℹ️</span>
+    <div>Las cuotas de proyectos <strong>no tienen Beneficio por Pronto Pago</strong>, solo fecha de vencimiento.</div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════ 8. AMENITIES -->
+<section>
+  <div class="section-num">Sección 8</div>
+  <h2>Amenities (espacios comunes)</h2>
+
+  <p>
+    Los amenities son los espacios comunes del edificio que pueden reservarse: barbacoa,
+    gimnasio, salón de usos múltiples, cancha, piscina, etc.
+  </p>
+
+  <h3>Configurar un amenity</h3>
+  <p>Desde el menú <strong>Amenities</strong> → <strong>+ Nuevo</strong>:</p>
+  <ul>
+    <li><strong>Nombre y descripción.</strong></li>
+    <li><strong>Modo de pago:</strong> prepago (comprobante antes de confirmar), cargo a expensas, o gratuito.</li>
+    <li><strong>Franjas horarias (slots):</strong> ej. "Turno mañana 09:00–13:00", "Turno tarde 14:00–20:00".</li>
+    <li><strong>Depósito de garantía</strong> y modo de devolución (efectivo o crédito).</li>
+    <li><strong>Capacidad máxima</strong> y aprobación requerida o automática.</li>
+  </ul>
+
+  <h3>Gestión de reservas</h3>
+  <p>
+    Los propietarios con acceso guest pueden solicitar reservas desde su panel.
+    El administrador ve todas las reservas y puede confirmar, rechazar o gestionar depósitos.
+  </p>
+
+  <div class="callout tip">
+    <span class="callout-icon">💡</span>
+    <div>
+      Cuando dos unidades solicitan el mismo slot en la misma fecha, el sistema sugiere
+      prioridad a la unidad con menor historial de uso reciente.
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════ 9. COMUNICADOS -->
+<section>
+  <div class="section-num">Sección 9</div>
+  <h2>Comunicados</h2>
+
+  <p>
+    Desde el menú <strong>Comunicados</strong> podés enviar mensajes por email a todas las
+    unidades del edificio o a grupos específicos.
+  </p>
+
+  <h3>Avisos de recaudación</h3>
+  <p>
+    Al crear un nuevo período, el sistema puede enviar automáticamente un <strong>Aviso de Recaudación</strong>
+    a cada unidad con:
+  </p>
+  <ul>
+    <li>Monto con Beneficio (si paga antes de la fecha límite).</li>
+    <li>Monto Base (si paga después).</li>
+    <li>Fecha límite del período.</li>
+    <li>Código de referencia único para la transferencia (<code>ENC-{código}-{período}</code>).</li>
+  </ul>
+
+  <h3>Recordatorios automáticos</h3>
+  <p>
+    El sistema puede enviar recordatorios a las unidades con saldo pendiente antes del
+    vencimiento. Configurá los días de aviso desde <strong>Notificaciones → Configuración</strong>.
+  </p>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════ 10. ASAMBLEAS -->
+<section>
+  <div class="section-num">Sección 10</div>
+  <h2>Asambleas</h2>
+
+  <p>
+    Desde el menú <strong>Asambleas</strong> podés gestionar asambleas ordinarias y extraordinarias
+    de copropietarios, con control de quórum y votaciones.
+  </p>
+
+  <h3>Crear una asamblea</h3>
+  <ul>
+    <li>Tipo: ordinaria o extraordinaria.</li>
+    <li>Fecha y ejercicio.</li>
+    <li>Modo de quórum: porcentaje o milésimas.</li>
+  </ul>
+
+  <h3>Pasar lista</h3>
+  <p>
+    Durante la asamblea, marcá los presentes indicando su modo de participación:
+    presencial, online, o representado por otra unidad.
+    El sistema calcula el quórum en tiempo real.
+  </p>
+
+  <h3>Votaciones</h3>
+  <p>
+    Creá consultas con opciones de voto. El sistema registra los votos por unidad
+    y calcula resultados en milésimas y porcentaje.
+  </p>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════ 11. USUARIOS -->
+<section>
+  <div class="section-num">Sección 11</div>
+  <h2>Usuarios del edificio</h2>
+
+  <p>
+    Desde el menú <strong>Usuarios</strong> podés gestionar quién tiene acceso al edificio
+    y con qué nivel de permisos.
+  </p>
+
+  <h3>Invitar un usuario</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Clic en "+ Invitar usuario"</strong>
+        <p>Ingresá el email de la persona a invitar.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Seleccionar el rol</strong>
+        <p>Admin (gestión completa), Comisión (registra pagos) o Guest (solo ve su unidad).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>El usuario recibe un email</strong>
+        <p>Con sus credenciales temporales y un link para acceder al sistema.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-icon">ℹ️</span>
+    <div>
+      Los propietarios con email cargado en las unidades reciben invitación automática
+      con rol <strong>guest</strong> al finalizar el onboarding.
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════ 12. FAQ -->
+<section>
+  <div class="section-num">Sección 12</div>
+  <h2>Preguntas frecuentes</h2>
+
+  <h3>¿Qué pasa si me equivoco en el monto de la expensa al crear un período?</h3>
+  <p>
+    Mientras el período esté abierto, podés editarlo desde el ícono de editar en la lista de períodos.
+    Una vez cerrado, ya no es posible modificarlo.
+  </p>
+
+  <h3>¿Puedo registrar pagos en moneda extranjera?</h3>
+  <p>
+    Los pagos de expensas siempre se registran en UYU. Los gastos de proveedores sí pueden
+    cargarse en USD, y el sistema los convierte usando el tipo de cambio del período.
+  </p>
+
+  <h3>¿Qué es la "Pérdida de Beneficio"?</h3>
+  <p>
+    Es lo que ocurre cuando una unidad paga después de la fecha límite: pierde el descuento
+    por pronto pago y debe abonar el Monto Base completo (sin descuento).
+  </p>
+
+  <h3>¿Cómo sé si una unidad es deudora?</h3>
+  <p>
+    Una unidad se clasifica como <strong>deudor</strong> cuando supera los parámetros
+    configurados en la Política de Deudores (mínimo de pago y/o períodos consecutivos con saldo).
+    El estado se muestra en la tabla de recaudación.
+  </p>
+
+  <h3>¿Puedo importar unidades después del onboarding?</h3>
+  <p>
+    Sí. Desde el menú <strong>Unidades</strong> podés agregar unidades manualmente en cualquier
+    momento. La importación por CSV solo está disponible durante el onboarding.
+  </p>
+
+  <h3>¿Qué pasa con las unidades que no tienen email?</h3>
+  <p>
+    Pueden cargarse igualmente. Simplemente no recibirán notificaciones por email ni invitación
+    para acceder al panel de propietario.
+  </p>
+
+  <h3>¿El tipo de cambio se actualiza automáticamente?</h3>
+  <p>
+    Sí. El sistema obtiene la cotización del Banco Central del Uruguay (BCU) una vez por día.
+    Podés sobreescribirla manualmente desde <strong>Tipo de Cambio</strong> en el menú lateral;
+    el override se preserva y no lo pisa la actualización automática siguiente.
+  </p>
+
+  <hr>
+  <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 24px;">
+    El Encargado · <strong>elencargado.app</strong> · Versión 1.0 — Noviembre 2026
+  </p>
+</section>
+
+</body>
+</html>
