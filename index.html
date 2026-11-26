@@ -495,7 +495,8 @@
 
   <p>
     La forma más rápida de cargar todas las unidades del edificio es importar un archivo CSV.
-    El sistema acepta los siguientes campos:
+    El sistema acepta los siguientes campos. <strong>El orden de las columnas no importa</strong>:
+    el sistema las identifica por nombre.
   </p>
 
   <table>
@@ -504,22 +505,27 @@
     </thead>
     <tbody>
       <tr><td><code>unit_code</code></td><td>✅ Sí</td><td>Código único de la unidad</td><td>101, PB-L1, G-05</td></tr>
+      <tr><td><code>tipo_unidad</code></td><td>No</td><td>Tipo de unidad (default: apartamento)</td><td>apartamento, local, cochera, baulera</td></tr>
       <tr><td><code>propietario_nombre</code></td><td>No</td><td>Nombre del propietario</td><td>María Pérez</td></tr>
-      <tr><td><code>propietario_email</code></td><td>No</td><td>Email (recibe invitación guest)</td><td>maria@ejemplo.com</td></tr>
+      <tr><td><code>propietario_email</code></td><td>No</td><td>Email del propietario (recibe invitación guest)</td><td>maria@ejemplo.com</td></tr>
+      <tr><td><code>propietario_telefono</code></td><td>No</td><td>Teléfono del propietario</td><td>+598 99 000 000</td></tr>
+      <tr><td><code>residente_nombre</code></td><td>No</td><td>Nombre del residente (si difiere del propietario)</td><td>Pedro Sánchez</td></tr>
+      <tr><td><code>residente_email</code></td><td>No</td><td>Email del residente</td><td>pedro@ejemplo.com</td></tr>
+      <tr><td><code>contacto_telefono</code></td><td>No</td><td>Teléfono de contacto principal de la unidad</td><td>+598 98 111 222</td></tr>
+      <tr><td><code>numero_cochera</code></td><td>No</td><td>Cochera asignada a la unidad</td><td>C-05</td></tr>
       <tr><td><code>coeficiente</code></td><td>Si usás milésimas</td><td>Valor en milésimas (total = 1000)</td><td>52</td></tr>
       <tr><td><code>superficie_m2</code></td><td>Si usás m²</td><td>Superficie en metros cuadrados</td><td>87.50</td></tr>
-      <tr><td><code>tipo_unidad</code></td><td>No</td><td>Tipo de unidad</td><td>apartamento, local, cochera, baulera</td></tr>
     </tbody>
   </table>
 
   <h4>Ejemplo de CSV (distribución por milésimas)</h4>
-  <pre><span class="comment"># El archivo debe ser UTF-8, separado por comas</span>
-<span class="key">unit_code</span>,<span class="key">propietario_nombre</span>,<span class="key">propietario_email</span>,<span class="key">coeficiente</span>,<span class="key">tipo_unidad</span>
-<span class="val">101</span>,<span class="val">María Pérez</span>,<span class="val">maria@email.com</span>,<span class="val">52</span>,<span class="val">apartamento</span>
-<span class="val">102</span>,<span class="val">Juan García</span>,<span class="val">juan@email.com</span>,<span class="val">48</span>,<span class="val">apartamento</span>
-<span class="val">201</span>,<span class="val">Ana Rodríguez</span>,<span class="val"></span>,<span class="val">55</span>,<span class="val">apartamento</span>
-<span class="val">G-01</span>,<span class="val">Carlos López</span>,<span class="val">carlos@email.com</span>,<span class="val">18</span>,<span class="val">cochera</span>
-<span class="val">PB-L1</span>,<span class="val">Comercial SA</span>,<span class="val">local@comercial.com</span>,<span class="val">120</span>,<span class="val">local</span></pre>
+  <pre><span class="comment"># El archivo debe ser UTF-8, separado por comas. El orden de columnas no importa.</span>
+<span class="key">unit_code</span>,<span class="key">tipo_unidad</span>,<span class="key">propietario_nombre</span>,<span class="key">propietario_email</span>,<span class="key">propietario_telefono</span>,<span class="key">residente_nombre</span>,<span class="key">coeficiente</span>
+<span class="val">101</span>,<span class="val">apartamento</span>,<span class="val">María Pérez</span>,<span class="val">maria@email.com</span>,<span class="val">+598 99 000 001</span>,<span class="val"></span>,<span class="val">52</span>
+<span class="val">102</span>,<span class="val">apartamento</span>,<span class="val">Juan García</span>,<span class="val">juan@email.com</span>,<span class="val"></span>,<span class="val">Pedro García</span>,<span class="val">48</span>
+<span class="val">201</span>,<span class="val">apartamento</span>,<span class="val">Ana Rodríguez</span>,<span class="val"></span>,<span class="val"></span>,<span class="val"></span>,<span class="val">55</span>
+<span class="val">G-01</span>,<span class="val">cochera</span>,<span class="val">Carlos López</span>,<span class="val">carlos@email.com</span>,<span class="val"></span>,<span class="val"></span>,<span class="val">18</span>
+<span class="val">PB-L1</span>,<span class="val">local</span>,<span class="val">Comercial SA</span>,<span class="val">local@comercial.com</span>,<span class="val"></span>,<span class="val"></span>,<span class="val">120</span></pre>
 
   <div class="callout warning">
     <span class="callout-icon">⚠️</span>
@@ -760,13 +766,32 @@
   <h3>Proveedores</h3>
   <p>
     Desde el menú <strong>Proveedores</strong> podés mantener un registro de empresas y personas
-    que prestan servicios al edificio. Cada proveedor puede tener datos bancarios para facilitar
-    los pagos.
+    que prestan servicios al edificio. Los proveedores son compartidos entre todos los edificios
+    de la administradora. Cada proveedor puede tener datos bancarios, contacto principal y
+    un contacto secundario.
   </p>
   <p>
     También es posible importar proveedores masivamente desde un archivo CSV usando el botón
     <strong>"Importar CSV"</strong> en la página de proveedores.
+    <strong>El orden de las columnas no importa</strong>: el sistema las identifica por nombre.
   </p>
+
+  <table>
+    <thead>
+      <tr><th>Columna</th><th>Requerida</th><th>Descripción</th><th>Ejemplo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>nombre_fantasia</code></td><td>✅ Sí</td><td>Nombre comercial del proveedor</td><td>Plomería López</td></tr>
+      <tr><td><code>razon_social</code></td><td>No</td><td>Razón social legal</td><td>López &amp; Asoc. SRL</td></tr>
+      <tr><td><code>banco</code></td><td>No</td><td>Banco donde cobran</td><td>Scotiabank</td></tr>
+      <tr><td><code>tipo_cuenta</code></td><td>No</td><td>Tipo de cuenta bancaria</td><td>Caja de ahorro</td></tr>
+      <tr><td><code>numero_cuenta</code></td><td>No</td><td>Número de cuenta</td><td>000-123456-00</td></tr>
+      <tr><td><code>titular_cuenta</code></td><td>No</td><td>Titular de la cuenta</td><td>Juan López</td></tr>
+      <tr><td><code>contacto_nombre</code></td><td>No</td><td>Nombre del contacto principal</td><td>Ana García</td></tr>
+      <tr><td><code>contacto_email</code></td><td>No</td><td>Email del contacto principal</td><td>ana@lopez.com</td></tr>
+      <tr><td><code>contacto_telefono</code></td><td>No</td><td>Teléfono del contacto principal</td><td>+598 99 000 000</td></tr>
+    </tbody>
+  </table>
 
   <h3>Gastos</h3>
   <p>
